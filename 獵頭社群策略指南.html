@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>獵頭顧問社群策略指南</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans TC', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    min-height: 100vh;
+    color: #e0e0e0;
+  }
+  .header {
+    padding: 40px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .header-sub { font-size: 13px; letter-spacing: 4px; color: #888; margin-bottom: 12px; text-transform: uppercase; }
+  .header h1 {
+    font-size: 28px; font-weight: 900;
+    background: linear-gradient(135deg, #f5af19, #f12711);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin: 0 0 8px; line-height: 1.3;
+  }
+  .header p { font-size: 14px; color: #999; }
+
+  .tab-nav { display: flex; padding: 16px 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .tab-btn {
+    flex: 1; padding: 12px 8px; border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent; color: #777; font-size: 13px; font-weight: 400;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  .tab-btn.active { border-bottom-color: #f5af19; color: #f5af19; font-weight: 700; }
+  .tab-btn .tab-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+
+  .content { padding: 20px 16px 40px; }
+
+  /* View toggle */
+  .view-toggle { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; }
+  .view-btn {
+    flex: 1; padding: 10px; border: none; border-radius: 8px;
+    background: transparent; color: #888; font-size: 13px; font-weight: 400;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  .view-btn.active { background: rgba(245,175,25,0.15); color: #f5af19; font-weight: 600; }
+
+  /* Cards */
+  .cards { display: flex; flex-direction: column; gap: 10px; }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s;
+  }
+  .card-header { display: flex; align-items: center; gap: 12px; }
+  .card-icon { font-size: 22px; }
+  .card-name { font-size: 14px; font-weight: 700; flex: 1; }
+  .card-arrow { font-size: 18px; color: #666; transition: transform 0.3s; }
+  .card.open .card-arrow { transform: rotate(180deg); }
+
+  .card-body { margin-top: 16px; display: none; }
+  .card.open .card-body { display: block; }
+
+  .section-label { font-size: 11px; color: #999; letter-spacing: 2px; margin-bottom: 10px; }
+  .strategy-item { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; color: #ccc; }
+  .strategy-arrow { flex-shrink: 0; }
+
+  .workflow-box {
+    background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 12px; margin-bottom: 12px;
+  }
+  .workflow-box .section-label { margin-bottom: 6px; }
+  .workflow-box p { font-size: 13px; color: #bbb; line-height: 1.6; }
+
+  .tool-item { display: flex; gap: 8px; margin-bottom: 6px; font-size: 12px; align-items: flex-start; }
+  .tool-badge {
+    padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .tool-desc { color: #aaa; }
+
+  /* Tab 2: Workflow */
+  .info-box {
+    font-size: 13px; color: #999; margin-bottom: 20px; line-height: 1.7;
+    border-radius: 10px; padding: 16px;
+  }
+  .info-box.warm { background: rgba(245,175,25,0.06); border: 1px solid rgba(245,175,25,0.15); }
+  .info-box.cool { background: rgba(33,150,243,0.06); border: 1px solid rgba(33,150,243,0.15); }
+
+  .timeline { position: relative; }
+  .timeline-line {
+    position: absolute; left: 19px; top: 24px; bottom: 24px; width: 2px;
+    background: linear-gradient(to bottom, #f5af19, #f12711); border-radius: 1px;
+  }
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 16px; position: relative; }
+  .timeline-dot {
+    width: 40px; height: 40px; border-radius: 50%; background: #1a1a2e;
+    border: 2px solid #f5af19; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; z-index: 1;
+  }
+  .timeline-content {
+    flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 14px;
+  }
+  .timeline-title { font-size: 13px; font-weight: 700; color: #f5af19; margin-bottom: 6px; }
+  .timeline-desc { font-size: 13px; color: #bbb; line-height: 1.6; }
+
+  .auto-flow {
+    margin-top: 24px; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;
+  }
+  .auto-flow-title { font-size: 14px; font-weight: 700; color: #f5af19; margin-bottom: 16px; }
+  .auto-step { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .auto-num {
+    width: 24px; height: 24px; border-radius: 50%; background: rgba(245,175,25,0.15);
+    color: #f5af19; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .auto-text { font-size: 13px; color: #ccc; }
+  .auto-arrow { color: #555; margin-left: auto; }
+
+  /* Tab 3: AI Stack */
+  .priority-group { margin-bottom: 20px; }
+  .priority-label { font-size: 12px; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .priority-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .ai-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 14px; margin-bottom: 8px;
+  }
+  .ai-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .ai-card-category { font-size: 13px; font-weight: 700; color: #e0e0e0; }
+  .ai-card-tools { font-size: 11px; background: rgba(245,175,25,0.12); color: #f5af19; padding: 2px 8px; border-radius: 4px; }
+  .ai-card-desc { font-size: 12px; color: #999; }
+
+  .n8n-box {
+    margin-top: 8px;
+    background: linear-gradient(135deg, rgba(245,175,25,0.08), rgba(241,39,17,0.08));
+    border: 1px solid rgba(245,175,25,0.2); border-radius: 12px; padding: 20px;
+  }
+  .n8n-title { font-size: 14px; font-weight: 700; color: #f5af19; margin-bottom: 12px; }
+  .n8n-body { font-size: 13px; color: #bbb; line-height: 1.8; }
+  .n8n-body strong { color: #e0e0e0; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-sub">Headhunter × Social Media</div>
+  <h1>獵頭顧問社群策略指南</h1>
+  <p>基於 YouTube 十大基本策略框架</p>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="fundamentals"><span class="tab-icon">🎯</span>十大策略對應</button>
+  <button class="tab-btn" data-tab="workflow"><span class="tab-icon">⚙️</span>日常工作流程</button>
+  <button class="tab-btn" data-tab="aistack"><span class="tab-icon">🤖</span>AI 工具清單</button>
+</div>
+
+<div class="content">
+
+  <!-- TAB 1 -->
+  <div id="tab-fundamentals" class="tab-content active">
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="client">🏢 吸引企業客戶</button>
+      <button class="view-btn" data-view="candidate">👤 吸引人選</button>
+    </div>
+    <div class="cards" id="cards-container"></div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div id="tab-workflow" class="tab-content">
+    <div class="info-box warm">💡 核心概念：你的日常工作每一步都是內容素材。不需要額外「創作」，只需要在工作中多一個「記錄」的動作，再用 AI 自動轉化為社群內容。</div>
+    <div class="timeline" id="timeline-container"></div>
+    <div class="auto-flow">
+      <div class="auto-flow-title">🔄 建議自動化流程</div>
+      <div id="auto-steps"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3 -->
+  <div id="tab-aistack" class="tab-content">
+    <div class="info-box cool">🎯 以下工具按優先級排列。建議先從「必備」開始，穩定後再加入「推薦」和「加分」工具。</div>
+    <div id="ai-stack-container"></div>
+    <div class="n8n-box">
+      <div class="n8n-title">⚡ n8n 自動化範例流程</div>
+      <div class="n8n-body">
+        <strong>觸發：</strong>Airtable 新增一筆素材記錄<br>
+        <strong>步驟 1：</strong>Claude API 生成 LinkedIn 貼文 + IG 圖文版本<br>
+        <strong>步驟 2：</strong>Canva API 套用品牌模板生成圖卡<br>
+        <strong>步驟 3：</strong>Buffer API 排入下一個空檔時段<br>
+        <strong>步驟 4：</strong>Slack 通知你確認或微調<br>
+        <strong>結果：</strong>從記錄素材到排程發文，全程 &lt; 2 分鐘
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const fundamentals = [
+  { id:"discoverable", name:"Discoverable 爭取曝光", icon:"🔍", color:"#E8453C",
+    clientStrategy:["用產業關鍵字發文：「2026 半導體人才市場趨勢」「AI 工程師薪資報告」","LinkedIn 文章加上 #獵頭 #人才招募 #HR 等標籤","Google 我的商家建立獵頭顧問公司資料","在 PTT Salary 板、Dcard 職場板定期分享市場洞察"],
+    candidateStrategy:["職缺標題用求職者會搜尋的關鍵字，不用內部代碼","建立「職缺快報」系列，定期更新熱門機會","在 CakeResume、104、LinkedIn 同步曝光","用短影片呈現「一分鐘看懂這個職缺」"],
+    workflow:"每天做 sourcing 時，記錄搜尋到的市場數據 → 整理成每週一篇「市場觀察」貼文",
+    aiTools:[{tool:"Claude API",use:"自動將 sourcing 筆記轉成社群貼文草稿"},{tool:"Perplexity AI",use:"快速蒐集產業薪資與趨勢數據"},{tool:"Semrush / Ubersuggest",use:"找出求職者與 HR 常搜尋的關鍵字"}]},
+  { id:"accessible", name:"Accessible 無障礙", icon:"🚪", color:"#E8773C",
+    clientStrategy:["避免獵頭術語，用老闆聽得懂的語言：「幫你找到對的人，不只是能力好的人」","每篇貼文都能獨立閱讀，不需要看過前篇","新客戶一進你的頁面就能理解你做什麼、擅長什麼產業"],
+    candidateStrategy:["職缺說明清楚寫出：薪資範圍、工作內容、團隊文化","用「求職者常見 Q&A」降低投遞門檻","流程透明化：「投遞後會發生什麼事？」圖解說明"],
+    workflow:"每次面談候選人後，記錄他們最常問的問題 → 變成「求職者 FAQ」系列內容",
+    aiTools:[{tool:"Claude",use:"將專業 JD 改寫成求職者友善版本"},{tool:"Hemingway Editor",use:"檢查內容可讀性，確保易懂"},{tool:"Canva AI",use:"快速產出流程圖、資訊圖表"}]},
+  { id:"shareable", name:"Shareable 分享價值", icon:"🔗", color:"#E8A83C",
+    clientStrategy:["產出「產業薪資報告」「人才市場白皮書」等高價值內容","分享匿名成功案例：「我們如何在 2 週內幫客戶找到 CTO」","製作「面試紅旗清單」讓 HR 主管會想轉發給團隊"],
+    candidateStrategy:["「轉職懶人包」「履歷健檢清單」等實用工具","薪資談判技巧、面試準備攻略","產業轉職故事（匿名）：「從銀行轉進 FinTech 的真實歷程」"],
+    workflow:"每次成功結案 → 整理成匿名 case study；每季彙整薪資數據 → 產出趨勢報告",
+    aiTools:[{tool:"Claude API + Canva",use:"自動生成薪資報告的圖表與摘要"},{tool:"Gamma.app",use:"一鍵將數據轉成精美簡報 / 報告"},{tool:"Napkin AI",use:"把文字觀點快速轉成可分享的視覺圖卡"}]},
+  { id:"collaborative", name:"Collaborative 合作性", icon:"🤝", color:"#4CAF50",
+    clientStrategy:["與 HR 社群共同舉辦線上活動：「2026 招募趨勢座談會」","邀請客戶公司的用人主管一起做 LinkedIn Live","與其他不同領域獵頭互相推薦、聯名發文"],
+    candidateStrategy:["邀請已成功轉職的候選人分享心得（影片/文字）","與職涯教練合作舉辦「履歷診療室」活動","與技術社群（如 COSCUP、MOPCON）合作曝光職缺"],
+    workflow:"每次與客戶或候選人互動良好時 → 邀請對方做一段推薦或合作內容",
+    aiTools:[{tool:"Calendly + Zoom",use:"自動排程與錄製合作訪談"},{tool:"Descript / CapCut",use:"AI 自動剪輯訪談精華片段"},{tool:"Claude",use:"從訪談逐字稿自動生成多平台貼文"}]},
+  { id:"targeted", name:"Targeted 指定目標", icon:"🎯", color:"#2196F3",
+    clientStrategy:["明確定位你專精的產業（如：半導體、SaaS、金融科技）","針對不同產業客戶製作不同內容系列","LinkedIn 精準投放給特定公司的 HR 主管與用人主管"],
+    candidateStrategy:["按職能分類內容：工程師、PM、業務、財務","依資歷分層：新鮮人 vs 中高階 vs C-level","建立不同的 LINE 社群或電子報，分眾溝通"],
+    workflow:"維護客戶與人選的標籤分類 → 發送分眾內容時自動配對",
+    aiTools:[{tool:"Airtable + n8n",use:"建立人選/客戶標籤系統，自動分眾推播"},{tool:"Mailchimp / Beehiiv",use:"自動化分眾電子報"},{tool:"LinkedIn Sales Navigator",use:"精準篩選目標受眾投放內容"}]},
+  { id:"conversational", name:"Conversational 對話", icon:"💬", color:"#9C27B0",
+    clientStrategy:["用「你遇過這種情況嗎？」開頭引發共鳴","分享獵頭日常的真實對話（脫敏處理）","定期做 LinkedIn Poll：「你覺得招人最難的是什麼？」"],
+    candidateStrategy:["用第二人稱寫文：「如果你正在猶豫要不要跳槽...」","開放 DM 諮詢，降低第一步門檻","Stories / 限時動態做「問我任何事」互動"],
+    workflow:"每天回覆訊息時 → 記錄常見問題與有趣對話 → 轉化為對話式貼文",
+    aiTools:[{tool:"Manychat",use:"LinkedIn / IG 自動回覆常見問題"},{tool:"Claude",use:"將真實對話改寫成社群貼文（去識別化）"},{tool:"Typeform",use:"建立互動式問卷收集求職意向"}]},
+  { id:"interactive", name:"Interactive 互動", icon:"🎮", color:"#00BCD4",
+    clientStrategy:["舉辦「免費招募健檢」活動，企業填表後給建議","做互動式 Carousel：「你的招募流程得幾分？」","Webinar 現場 Q&A，回答企業招募難題"],
+    candidateStrategy:["「履歷評分器」互動工具","「你適合什麼工作？」小測驗","留言「+1」自動私訊職缺詳情"],
+    workflow:"每次客戶或候選人有好的互動反饋 → 截圖（去敏）作為社群素材",
+    aiTools:[{tool:"Tally / Typeform",use:"建立互動測驗與表單"},{tool:"Manychat",use:"留言觸發自動私訊職缺資訊"},{tool:"Claude API + React",use:"打造「AI 履歷健檢」互動工具嵌入網站"}]},
+  { id:"consistent", name:"Consistent 一致性", icon:"📅", color:"#FF5722",
+    clientStrategy:["固定品牌視覺：顏色、字型、Logo 風格統一","每週固定欄目：週一市場觀察、週三成功案例、週五職缺精選","統一語調：專業但親切，不冷冰冰"],
+    candidateStrategy:["「每日一職缺」或「每週精選職缺」固定更新","用統一模板發布職缺，建立辨識度","固定每月一次「職涯小講堂」直播"],
+    workflow:"用 content calendar 排定每週發文主題 → batch 一次產出一週內容",
+    aiTools:[{tool:"Notion + n8n",use:"建立內容行事曆與自動提醒"},{tool:"Buffer / Hootsuite",use:"排程一週貼文，自動發布"},{tool:"Canva Brand Kit",use:"鎖定品牌模板，確保視覺一致"}]},
+  { id:"sustainable", name:"Sustainable 持之以恆", icon:"♻️", color:"#795548",
+    clientStrategy:["把一份薪資報告拆成 10 篇 LinkedIn 貼文","建立內容模板，降低每次產出的時間成本","日常工作本身就是內容來源，不需額外「創作」"],
+    candidateStrategy:["同一個成功案例 → 文字版 + 圖卡版 + 短影片版","舊內容定期更新數據後重新發布","建立「常青內容」資料庫：面試技巧、履歷範本"],
+    workflow:"每個工作步驟都產出一個內容素材 → 累積素材庫 → 排程重複利用",
+    aiTools:[{tool:"Claude API",use:"一篇長文自動拆解成多平台短貼文"},{tool:"Repurpose.io",use:"一支影片自動轉成多平台格式"},{tool:"Airtable",use:"建立內容素材庫，追蹤哪些可以回收再利用"}]},
+  { id:"inspirational", name:"Inspirational 靈感", icon:"✨", color:"#F44336",
+    clientStrategy:["分享你為什麼做獵頭的初心故事","展現你對產業的熱情與深度理解","不只是「找人」，而是「幫企業打造夢幻團隊」的使命感"],
+    candidateStrategy:["分享「改變人生的一次轉職」故事","展現你真心想幫人找到好歸屬的態度","不只發職缺，也分享職涯觀點與人生哲學"],
+    workflow:"定期反思：這週最讓你感動的案例是什麼？ → 寫成真誠的個人分享文",
+    aiTools:[{tool:"Claude",use:"幫你把口述想法整理成有溫度的文章"},{tool:"手機錄音 + Whisper",use:"隨時口述靈感，AI 自動轉文字"},{tool:"Day One / Notion",use:"每日記錄工作感受，累積真實故事素材"}]}
+];
+
+const workflowSteps = [
+  {step:"Sourcing 搜尋人選",content:"搜尋過程中發現的市場數據 → 「市場觀察」貼文",icon:"🔎"},
+  {step:"Screening 篩選面談",content:"候選人常問問題 → 「求職者 FAQ」系列",icon:"📞"},
+  {step:"Client Meeting 客戶會議",content:"客戶的招募痛點 → 「企業招募解方」貼文",icon:"🏢"},
+  {step:"Matching 媒合推薦",content:"媒合邏輯與考量 → 「獵頭幕後」系列",icon:"🧩"},
+  {step:"Interview Coaching 面試輔導",content:"面試技巧與常見錯誤 → 「面試攻略」系列",icon:"🎤"},
+  {step:"Offer Negotiation 薪資談判",content:"談判策略與數據 → 「薪資情報」貼文",icon:"💰"},
+  {step:"Closing 成功結案",content:"匿名成功故事 → Case Study 與客戶見證",icon:"🎉"},
+  {step:"Follow-up 後續追蹤",content:"入職後回饋 → 「轉職後的真實生活」系列",icon:"📬"}
+];
+
+const topAIStack = [
+  {category:"內容生成",tools:"Claude API / ChatGPT",desc:"貼文撰寫、JD 改寫、報告摘要",priority:"必備"},
+  {category:"自動化流程",tools:"n8n / Make.com",desc:"串接所有工具，自動觸發工作流",priority:"必備"},
+  {category:"社群排程",tools:"Buffer / Hootsuite",desc:"一次排完一週貼文",priority:"必備"},
+  {category:"視覺設計",tools:"Canva AI / Napkin AI",desc:"快速產出品牌化圖卡與報告",priority:"推薦"},
+  {category:"影片剪輯",tools:"CapCut / Descript",desc:"AI 自動剪輯、加字幕",priority:"推薦"},
+  {category:"互動機器人",tools:"Manychat",desc:"社群自動回覆與觸發私訊",priority:"推薦"},
+  {category:"資料管理",tools:"Airtable / Notion",desc:"人選庫、內容庫、客戶標籤",priority:"必備"},
+  {category:"語音轉文字",tools:"Whisper / iOS 備忘錄",desc:"隨時口述想法，AI 轉文字",priority:"加分"},
+  {category:"電子報",tools:"Beehiiv / Mailchimp",desc:"定期發送分眾電子報",priority:"加分"},
+  {category:"數據研究",tools:"Perplexity AI",desc:"快速查找產業薪資與趨勢",priority:"推薦"}
+];
+
+const autoSteps = [
+  "工作中隨手記錄（手機備忘錄 / Notion）",
+  "每天花 10 分鐘整理筆記到素材庫（Airtable）",
+  "每週用 Claude API 批次生成一週貼文草稿",
+  "用 Canva AI 套品牌模板生成圖卡",
+  "用 Buffer 排程一週自動發布",
+  "Manychat 自動回覆互動訊息"
+];
+
+let viewMode = "client";
+let openCard = null;
+
+function hexToRgb(hex) {
+  const h = hex.replace('#','');
+  return [parseInt(h.substring(0,2),16), parseInt(h.substring(2,4),16), parseInt(h.substring(4,6),16)].join(',');
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = fundamentals.map(f => {
+    const isOpen = openCard === f.id;
+    const strategies = viewMode === 'client' ? f.clientStrategy : f.candidateStrategy;
+    const label = viewMode === 'client' ? '企業客戶策略' : '人選吸引策略';
+    const bg = isOpen ? `linear-gradient(135deg, rgba(${hexToRgb(f.color)},0.12), rgba(${hexToRgb(f.color)},0.04))` : 'rgba(255,255,255,0.03)';
+    const border = isOpen ? f.color + '40' : 'rgba(255,255,255,0.06)';
+
+    return `<div class="card ${isOpen?'open':''}" style="background:${bg};border-color:${border}" onclick="toggleCard('${f.id}')">
+      <div class="card-header">
+        <span class="card-icon">${f.icon}</span>
+        <div class="card-name" style="color:${f.color}">${f.name}</div>
+        <span class="card-arrow">▾</span>
+      </div>
+      <div class="card-body" onclick="event.stopPropagation()">
+        <div style="margin-bottom:16px">
+          <div class="section-label">${label}</div>
+          ${strategies.map(s => `<div class="strategy-item"><span class="strategy-arrow" style="color:${f.color}">→</span><span>${s}</span></div>`).join('')}
+        </div>
+        <div class="workflow-box">
+          <div class="section-label">⚙️ 日常工作融入</div>
+          <p>${f.workflow}</p>
+        </div>
+        <div>
+          <div class="section-label">🤖 推薦 AI 工具</div>
+          ${f.aiTools.map(t => `<div class="tool-item"><span class="tool-badge" style="background:${f.color}22;color:${f.color}">${t.tool}</span><span class="tool-desc">${t.use}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(id) { openCard = openCard === id ? null : id; renderCards(); }
+
+function renderTimeline() {
+  const el = document.getElementById('timeline-container');
+  el.innerHTML = '<div class="timeline-line"></div>' + workflowSteps.map(s =>
+    `<div class="timeline-item"><div class="timeline-dot">${s.icon}</div><div class="timeline-content"><div class="timeline-title">${s.step}</div><div class="timeline-desc">${s.content}</div></div></div>`
+  ).join('');
+}
+
+function renderAutoSteps() {
+  document.getElementById('auto-steps').innerHTML = autoSteps.map((s, i) =>
+    `<div class="auto-step"><div class="auto-num">${i+1}</div><div class="auto-text">${s}</div>${i<5?'<span class="auto-arrow">↓</span>':''}</div>`
+  ).join('');
+}
+
+function renderAIStack() {
+  const priorities = [{name:"必備",color:"#f5af19"},{name:"推薦",color:"#4CAF50"},{name:"加分",color:"#888"}];
+  document.getElementById('ai-stack-container').innerHTML = priorities.map(p => {
+    const items = topAIStack.filter(t => t.priority === p.name);
+    return `<div class="priority-group">
+      <div class="priority-label" style="color:${p.color}"><span class="priority-dot" style="background:${p.color}"></span>${p.name}</div>
+      ${items.map(t => `<div class="ai-card"><div class="ai-card-header"><span class="ai-card-category">${t.category}</span><span class="ai-card-tools">${t.tools}</span></div><div class="ai-card-desc">${t.desc}</div></div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    openCard = null;
+    renderCards();
+  });
+});
+
+// View toggle
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    viewMode = btn.dataset.view;
+    renderCards();
+  });
+});
+
+// Init
+renderCards();
+renderTimeline();
+renderAutoSteps();
+renderAIStack();
+</script>
+</body>
+</html>
